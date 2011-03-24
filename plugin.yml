@@ -1,0 +1,6 @@
+name: RedstoneMobSpawn
+version: 1.0
+description: Lets you spawn a mob based from redstone using a sign
+author: VicWhiten
+website: www.radford.edu/mjrohr
+main: com.bukkit.vicwhiten.redstonemobspawn.RedstoneMobSpawn
