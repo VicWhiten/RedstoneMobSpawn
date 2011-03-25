@@ -1,21 +1,13 @@
 package com.bukkit.vicwhiten.redstonemobspawn;
 
-
-import java.util.List;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.CreatureType;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockRedstoneEvent;
-
-
-
 
 public class RedstoneMobSpawnBlockListener extends BlockListener {
 
@@ -58,7 +50,6 @@ public class RedstoneMobSpawnBlockListener extends BlockListener {
 				Sign sign = checkSign(adjacent);
 				CreatureType type = getCreatureType(sign);
 				Location loc = getSpawnLocation(adjacent, sign);
-				worldGuardCheck(adjacent);
 				//spawn the creature, place sign in hash
 				adjacent.getWorld().spawnCreature(loc, type);
 				plugin.signsTriggered.put(adjacent.getLocation(), true);
@@ -138,23 +129,4 @@ public class RedstoneMobSpawnBlockListener extends BlockListener {
 		}return null;
 	}
 
-	public void worldGuardCheck(Block block)
-	{
-		if(plugin.mobMax >= 0 )
-		{
-			List<LivingEntity> mobs = block.getWorld().getLivingEntities();
-			for(int j=0; j<mobs.size(); j++)
-			{
-				if(!Creature.class.isInstance(mobs.get(j)))
-				{
-					mobs.remove(j);
-					j--;
-				}
-			}
-			if(mobs.size() == plugin.mobMax)
-			{
-				mobs.get(0).remove();
-			}
-		}
-	}
 }
