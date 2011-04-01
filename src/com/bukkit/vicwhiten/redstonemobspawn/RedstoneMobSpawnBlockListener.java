@@ -1,13 +1,21 @@
 package com.bukkit.vicwhiten.redstonemobspawn;
 
+import java.util.List;
+
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockRedstoneEvent;
+import org.bukkit.event.block.SignChangeEvent;
 
 public class RedstoneMobSpawnBlockListener extends BlockListener {
 
@@ -18,6 +26,21 @@ public class RedstoneMobSpawnBlockListener extends BlockListener {
 		plugin = plug;
 	}
 	
+	public void onSignChange(SignChangeEvent event) {
+	
+		System.out.println("Sign Changed!");
+		String[] lines = event.getLines();
+		//is a mobspawn sign
+		if(lines.length >1 && lines[0].compareTo("MOBSPAWN") == 0)
+		{
+			Player player = event.getPlayer();
+			if(!plugin.checkPermission(player, "redstonemobspawn.spawn"))
+			{
+				event.setCancelled(true);
+				player.sendMessage(ChatColor.RED + "You do not have the require permissions to do this");
+			}
+		}
+	}
 	public void onBlockRedstoneChange(BlockRedstoneEvent event) 
 	{	
 		Block block = event.getBlock();
@@ -51,7 +74,7 @@ public class RedstoneMobSpawnBlockListener extends BlockListener {
 				CreatureType type = getCreatureType(sign);
 				Location loc = getSpawnLocation(adjacent, sign);
 				//spawn the creature, place sign in hash
-				adjacent.getWorld().spawnCreature(loc, type);
+				spawnCreature(adjacent.getWorld(), loc, type);
 				plugin.signsTriggered.put(adjacent.getLocation(), true);
 				}catch(Exception E){
 				}
@@ -60,7 +83,25 @@ public class RedstoneMobSpawnBlockListener extends BlockListener {
 
 	}
 	
-	
+	public void spawnCreature(World world, Location loc, CreatureType type)
+	{
+		if(plugin.lim != null)
+		{
+			if(plugin.lim.mobMax <= plugin.lim.getMobAmount(world))
+			{
+				List<LivingEntity> entities = world.getLivingEntities();
+				for(LivingEntity entity : entities)
+				{
+					if(Creature.class.isInstance(entity))
+					{
+						entity.remove();
+						break;
+					}
+				}
+			}
+		}
+		world.spawnCreature(loc, type);
+	}
 	public Location getSpawnLocation(Block block, Sign sign)
 	{
 		try{
