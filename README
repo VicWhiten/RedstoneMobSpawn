@@ -36,5 +36,9 @@ This will spawn a pig one block to the north of the sign
 ------------------------
 This will spawn a creeper on the sign.  Hope you aren't nearby!
 
+PERMISSIONS:
+redstonemobspawn is permissions based, using either Op, Permissions or GroupManager. The permission to spawn mobs through this plugin is:
+redstonemobspawn.spawn
 
+QUESTIONS/DEBUG/HELP:
 If you have any questions about the plugin, email me at mjrohr330@gmail.com and I'll try to get back to you
